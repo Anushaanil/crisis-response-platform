@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
 from config.permissions import IsSuperAdmin
 
 from .serializers import (
@@ -32,8 +34,15 @@ class LoginView(TokenObtainPairView):
 
 
 class MeView(APIView):
-
     def get(self, request):
         serializer = UserSerializer(request.user)
 
         return Response(serializer.data)
+
+
+class LogOutView(APIView):
+    def post(self, request):
+        refresh_token = request.data.get("refresh_token")
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+        return Response({"message": "logged out successfully."})

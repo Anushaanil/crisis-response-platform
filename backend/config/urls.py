@@ -28,4 +28,5 @@ urlpatterns = [
         name="token_refresh",
     ),
     path("api/auth/", include('apps.accounts.urls')),
+    path("api/org/", include('apps.organizations.urls')),
 ]
